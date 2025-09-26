@@ -20,9 +20,17 @@ from textblob import TextBlob
 # ---------------------------
 def fetch_doge_returns():
     data = yf.download("DOGE-USD", period="1y", interval="1d", progress=False)
-    data["LogRet"] = (data["Adj Close"] / data["Adj Close"].shift(1)).apply(torch.log)
+
+    # Pick adjusted close if it exists, otherwise use close
+    if "Adj Close" in data.columns:
+        prices = data["Adj Close"]
+    else:
+        prices = data["Close"]
+
+    data["LogRet"] = (prices / prices.shift(1)).apply(torch.log)
     data.dropna(inplace=True)
     return data["LogRet"].tolist()
+
 
 # ---------------------------
 # Fetch Twitter sentiment
