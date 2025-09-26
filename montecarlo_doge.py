@@ -18,6 +18,8 @@ from textblob import TextBlob
 # ---------------------------
 # Fetch DOGE returns
 # ---------------------------
+import numpy as np
+
 def fetch_doge_returns():
     data = yf.download("DOGE-USD", period="1y", interval="1d", progress=False)
 
@@ -27,7 +29,8 @@ def fetch_doge_returns():
     else:
         prices = data["Close"]
 
-    data["LogRet"] = (prices / prices.shift(1)).apply(torch.log)
+    # use numpy log instead of torch.log here
+    data["LogRet"] = np.log(prices / prices.shift(1))
     data.dropna(inplace=True)
     return data["LogRet"].tolist()
 
