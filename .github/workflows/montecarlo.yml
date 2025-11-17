@@ -4,8 +4,10 @@ on:
   schedule:
     - cron: "0 0,8,16 * * *"   # UTC times: midnight, 8am, 4pm
   workflow_dispatch:
-
-jobs:
+- name: Run simulation
+  env:
+    TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
+  run: python your_script.pyjobs:
   run-sim:
     runs-on: ubuntu-latest
     steps:
