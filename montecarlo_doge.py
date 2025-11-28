@@ -16,16 +16,13 @@ import numpy as np
 # Fetch DOGE returns
 # ---------------------------
 def fetch_doge_returns():
-    data = yf.download("DOGE-USD", period="1y", interval="1d", progress=False)
-    # Pick adjusted close if it exists, otherwise use close
-    if "Adj Close" in data.columns:
-        prices = data["Adj Close"]
-    else:
-        prices = data["Close"]
+    data = yf.download("DOGE-USD", period="1y", interval="1d", progress=False, auto_adjust=False)
+    # Get close price
+    prices = data["Close"]
     # Calculate log returns
     log_ret = np.log(prices / prices.shift(1))
-    log_ret.dropna(inplace=True)
-    return log_ret.tolist()
+    log_ret = log_ret.dropna()
+    return log_ret.values.tolist()
 
 # ---------------------------
 # Monte Carlo simulation
