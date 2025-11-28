@@ -1,33 +1,26 @@
 name: Monte Carlo Doge with Sentiment
-
 on:
   schedule:
     - cron: "0 0,8,16 * * *"   # UTC times: midnight, 8am, 4pm
   workflow_dispatch:
-- name: Run simulation
-  env:
-    TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
-  run: python your_script.pyjobs:
+
+jobs:
   run-sim:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Run Monte Carlo with Sentiment
         run: python montecarlo_doge.py
         env:
           TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
-
       - name: Commit results
         run: |
           git config user.name "github-actions[bot]"
